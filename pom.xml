@@ -179,19 +179,15 @@
         <module>openjpa-jdbc</module>
         <module>openjpa-persistence</module>
         <module>openjpa-persistence-jdbc</module>
-        <module>openjpa-persistence-locking</module>
         <module>openjpa-xmlstore</module>
         <module>openjpa-slice</module>
         <module>openjpa-jest</module>
         <module>openjpa-kubernetes</module>
         <module>openjpa</module>
         <module>openjpa-project</module>
-        <module>openjpa-examples</module>
-        <module>openjpa-integration</module>
         <module>openjpa-all</module>
         <module>openjpa-tools</module>
         <module>openjpa-features</module>
-        <module>openjpa-junit5</module>
     </modules>
 
     <profiles>
@@ -2114,30 +2110,6 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.8</version>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.apache.ant</groupId>
-                            <artifactId>ant-jsch</artifactId>
-                            <version>1.10.9</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>ant-contrib</groupId>
-                            <artifactId>ant-contrib</artifactId>
-                            <version>1.0b3</version>
-                            <!-- tries to pull in older ant-1.5.jar -->
-                            <exclusions>
-                                <exclusion>
-                                    <groupId>ant</groupId>
-                                    <artifactId>ant</artifactId>
-                                </exclusion>
-                            </exclusions>
-                        </dependency>
-                    </dependencies>
-                </plugin>
-                <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>taglist-maven-plugin</artifactId>
                     <version>3.1.0</version>
@@ -2173,12 +2145,6 @@
                                     </manifestEntries>
                                 </archive>
                             </configuration>
-                        </execution>
-                        <execution>
-                            <id>attach-tests</id>
-                            <goals>
-                                <goal>test-jar</goal>
-                            </goals>
                         </execution>
                     </executions>
                 </plugin>
@@ -2221,22 +2187,6 @@
         </pluginManagement>
 
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>test-source-compile</id>
-                        <phase>process-test-sources</phase>
-                        <goals>
-                            <goal>testCompile</goal>
-                        </goals>
-                        <configuration>
-                            <release>${java.class.version}</release>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
