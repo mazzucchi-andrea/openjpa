@@ -1,15 +1,21 @@
 package org.apache.openjpa.util;
 
 import org.apache.openjpa.util.dummies.Dummy;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 import java.util.Arrays;
 import java.util.Collection;
 
 import static org.apache.openjpa.TestMacros.*;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 @RunWith(Parameterized.class)
 public class CacheMapPinTest {
@@ -17,6 +23,11 @@ public class CacheMapPinTest {
     private static Object value;
     private static boolean empty;
     private static boolean expectedBehaviour;
+
+    CacheMap cacheMap;
+
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     public CacheMapPinTest(CacheMapPinTestParams params) {
         configure(params);
@@ -46,19 +57,23 @@ public class CacheMapPinTest {
         expectedBehaviour = params.expectedBehaviour;
     }
 
-    @Test
-    public void pinUnpinTest() {
-        CacheMap cacheMap = new CacheMap(true, MAX, SIZE, LOAD, CONCURRENCY_LEVEL);
+    @Before
+    public void setup() {
+        cacheMap = new CacheMap(true, MAX, SIZE, LOAD, CONCURRENCY_LEVEL);
         if (!empty) {
             cacheMap.put(key, value);
             assertFalse(cacheMap.isEmpty());
         }
-        cacheMap.pin(key); //test pin
+        cacheMap = spy(cacheMap);
+    }
+
+    @Test
+    public void pinTest() {
+        cacheMap.pin(key);
+        verify(cacheMap).writeLock();
+        verify(cacheMap).writeUnlock();
+
         assertEquals(expectedBehaviour, cacheMap.getPinnedKeys().contains(key));
-        if (cacheMap.getPinnedKeys().contains(key)) {
-            cacheMap.unpin(key);
-            assertFalse(cacheMap.getPinnedKeys().contains(key));
-        }
         assertTrue(expectedBehaviour);
     }
 

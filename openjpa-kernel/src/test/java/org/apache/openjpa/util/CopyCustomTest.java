@@ -47,7 +47,7 @@ public class CopyCustomTest {
                 {new CopyCustomTestParams(new Date(685098000000L), PASS)},
                 {new CopyCustomTestParams(new Date(), PASS)},
                 {new CopyCustomTestParams(new GregorianCalendar(TimeZone.getTimeZone("Europe/Rome")), PASS)},
-                    {new CopyCustomTestParams(new GregorianCalendar(), PASS)},
+                {new CopyCustomTestParams(new GregorianCalendar(), PASS)},
         });
     }
 

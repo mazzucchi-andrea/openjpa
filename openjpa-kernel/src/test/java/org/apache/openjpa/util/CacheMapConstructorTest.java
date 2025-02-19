@@ -1,15 +1,19 @@
 package org.apache.openjpa.util;
 
 import org.apache.openjpa.util.dummies.Dummy;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 import java.util.Arrays;
 import java.util.Collection;
 
 import static org.apache.openjpa.TestMacros.*;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 @RunWith(Parameterized.class)
 public class CacheMapConstructorTest {
@@ -17,6 +21,9 @@ public class CacheMapConstructorTest {
     private static int max;
     private static int size;
     private static boolean expectedBehavior;
+
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     public CacheMapConstructorTest(ConstructorParams params) {
         configure(params);
@@ -58,6 +65,7 @@ public class CacheMapConstructorTest {
             assertFalse(iae.getMessage(), expectedBehavior);
             return;
         }
+        cacheMap = spy(cacheMap);
         if (lru) {
             assertTrue(cacheMap.isLRU());
         } else {
@@ -84,6 +92,8 @@ public class CacheMapConstructorTest {
             return;
         }
         assertEquals(cacheMap.size(), numPuts * 2);
+        verify(cacheMap, times(3)).readLock();
+        verify(cacheMap, times(3)).readUnlock();
         assertTrue(expectedBehavior);
     }
 
