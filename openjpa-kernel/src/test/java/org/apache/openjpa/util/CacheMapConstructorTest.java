@@ -16,7 +16,6 @@ public class CacheMapConstructorTest {
     private static boolean lru;
     private static int max;
     private static int size;
-    private static float load;
     private static boolean expectedBehavior;
 
     public CacheMapConstructorTest(ConstructorParams params) {
@@ -26,20 +25,20 @@ public class CacheMapConstructorTest {
     @Parameterized.Parameters
     public static Collection<ConstructorParams[]> getTestParameters() {
         return Arrays.asList(new ConstructorParams[][]{
-                {new ConstructorParams(true, MAX, SIZE, .75F, PASS)}, //0
-                {new ConstructorParams(false, MAX, SIZE, .75F, PASS)}, //1
-                {new ConstructorParams(true, SIZE, MAX, .75F, PASS)},
-                {new ConstructorParams(false, SIZE, MAX, .75F, PASS)},
-                {new ConstructorParams(true, MAX, MAX, .75F, PASS)},
-                {new ConstructorParams(false, MAX, MAX, .75F, PASS)},
-                {new ConstructorParams(true, -1, SIZE, .75F, PASS)},
-                {new ConstructorParams(false, -1, SIZE, .75F, PASS)},
-                {new ConstructorParams(true, 0, SIZE, .75F, FAIL)}, // FAIL because I can't put anything
-                {new ConstructorParams(false, 0, SIZE, .75F, FAIL)}, //10
-                {new ConstructorParams(true, MAX, -1, .75F, PASS)}, //11
-                {new ConstructorParams(false, MAX, -1, .75F, PASS)}, //12
-                {new ConstructorParams(true, MAX, 0, .75F, FAIL)}, //13
-                {new ConstructorParams(false, MAX, 0, .75F, FAIL)}, //14 //ArithmeticException
+                {new ConstructorParams(true, MAX, SIZE, PASS)}, //0
+                {new ConstructorParams(false, MAX, SIZE, PASS)}, //1
+                {new ConstructorParams(true, SIZE, MAX, PASS)},
+                {new ConstructorParams(false, SIZE, MAX, PASS)},
+                {new ConstructorParams(true, MAX, MAX, PASS)},
+                {new ConstructorParams(false, MAX, MAX, PASS)},
+                {new ConstructorParams(true, -1, SIZE, PASS)},
+                {new ConstructorParams(false, -1, SIZE, PASS)},
+                {new ConstructorParams(true, 0, SIZE, FAIL)}, // FAIL because I can't put anything
+                {new ConstructorParams(false, 0, SIZE, FAIL)}, //9
+                {new ConstructorParams(true, MAX, -1, PASS)}, //10
+                {new ConstructorParams(false, MAX, -1, PASS)}, //11
+                {new ConstructorParams(true, MAX, 0, FAIL)}, //12
+                {new ConstructorParams(false, MAX, 0, FAIL)}, //13 //ArithmeticException
         });
     }
 
@@ -47,16 +46,14 @@ public class CacheMapConstructorTest {
         lru = params.lru;
         max = params.max;
         size = params.size;
-        load = params.load;
         expectedBehavior = params.expectedBehavior;
     }
 
     @Test
     public void cacheMapConstructorTest() {
-        System.out.println("lru = " + lru + ", max = " + max + ", size = " + size);
         CacheMap cacheMap;
         try {
-            cacheMap = new CacheMap(lru, max, size, load, 16);
+            cacheMap = new CacheMap(lru, max, size, LOAD, CONCURRENCY_LEVEL);
         } catch (IllegalArgumentException iae) {
             assertFalse(iae.getMessage(), expectedBehavior);
             return;
@@ -94,14 +91,12 @@ public class CacheMapConstructorTest {
         private final boolean lru;
         private final int max;
         private final int size;
-        private final float load;
         private final boolean expectedBehavior;
 
-        public ConstructorParams(boolean lru, int max, int size, float load, boolean expectedBehavior) {
+        public ConstructorParams(boolean lru, int max, int size, boolean expectedBehavior) {
             this.lru = lru;
             this.max = max;
             this.size = size;
-            this.load = load;
             this.expectedBehavior = expectedBehavior;
         }
     }

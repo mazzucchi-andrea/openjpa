@@ -89,13 +89,11 @@
 
         <maven.javadoc.version>3.10.0</maven.javadoc.version>
         <javadoc.additionalparam />
-        <maven.surefire.version>3.5.0</maven.surefire.version>
+        <maven.surefire.version>3.5.2</maven.surefire.version>
 
         <xbean.version>4.25</xbean.version>
         <bval.version>3.0.1</bval.version>
         <log4j2.version>2.23.1</log4j2.version>
-        <ant.version>1.10.14</ant.version>
-
         <jmock.version>2.13.1</jmock.version>
         <dbcp2.version>2.12.0</dbcp2.version>
         <pool2.version>2.12.0</pool2.version>
@@ -1825,11 +1823,6 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-simple</artifactId>
                 <version>${slf4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.ant</groupId>
-                <artifactId>ant</artifactId>
-                <version>${ant.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jmock</groupId>

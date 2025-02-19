@@ -91,9 +91,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <argLine>${argLine}</argLine>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -149,31 +146,6 @@
                     <target>11</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.8.1</version>
-                <executions>
-                    <execution>
-                        <id>extract-zip</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>br.usp.each.saeg</groupId>
-                                    <artifactId>ba-dua</artifactId>
-                                    <version>${ba-dua.version}</version>
-                                    <type>zip</type>
-                                    <outputDirectory>${project.build.directory}</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
@@ -183,6 +155,10 @@
             <id>pit</id>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                    </plugin>
                     <plugin>
                         <groupId>org.pitest</groupId>
                         <artifactId>pitest-maven</artifactId>
@@ -198,7 +174,7 @@
                                 <param>org.apache.openjpa.util.CacheMapPinTest</param>
                                 <param>org.apache.openjpa.util.CacheMapPutTest</param>
                                 <param>org.apache.openjpa.util.CacheMapRemoveTest</param>
-                                <param>org.apache.openjpa.util.CopyArrayPrimitiveTest</param>
+                                <param>org.apache.openjpa.util.CopyArray2Test</param>
                                 <param>org.apache.openjpa.util.CopyArrayTest</param>
                                 <param>org.apache.openjpa.util.CopyCustomTest</param>
                             </targetTests>
@@ -220,6 +196,13 @@
             <id>jacoco</id>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <argLine>${argLine}</argLine>
+                        </configuration>
+                    </plugin>
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
@@ -255,7 +238,7 @@
             <properties>
                 <BADUACLI>${project.build.directory}/lib/ba-dua-cli-${ba-dua.version}-all.jar</BADUACLI>
                 <BADUASER>${project.build.directory}/badua.ser</BADUASER>
-                <CLASSES>${project.build.directory}/classes</CLASSES>
+                <CLASSES>${project.build.directory}/classes/org/apache/openjpa/util</CLASSES>
                 <BADUAXML>${project.build.directory}/badua.xml</BADUAXML>
                 <argLine>
                     -javaagent:${project.build.directory}/lib/ba-dua-agent-rt-${ba-dua.version}-all.jar
@@ -266,11 +249,37 @@
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>3.8.1</version>
+                        <executions>
+                            <execution>
+                                <id>extract-zip</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>br.usp.each.saeg</groupId>
+                                            <artifactId>ba-dua</artifactId>
+                                            <version>${ba-dua.version}</version>
+                                            <type>zip</type>
+                                            <outputDirectory>${project.build.directory}</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
-                           <excludes>
-                               <exclude>**/CopyCustomTest.java</exclude>
-                           </excludes>
+                            <argLine>${argLine}</argLine>
+                            <excludes>
+                                <exclude>**/CopyCustomTest.java</exclude>
+                            </excludes>
                         </configuration>
                     </plugin>
                     <plugin>

@@ -8,9 +8,8 @@ import org.junit.runners.Parameterized;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.apache.openjpa.TestMacros.PASS;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.apache.openjpa.TestMacros.*;
+import static org.junit.Assert.*;
 
 @RunWith(Parameterized.class)
 public class CacheMapPinTest {
@@ -49,20 +48,18 @@ public class CacheMapPinTest {
 
     @Test
     public void pinUnpinTest() {
-        CacheMap cacheMap = new CacheMap(true);
+        CacheMap cacheMap = new CacheMap(true, MAX, SIZE, LOAD, CONCURRENCY_LEVEL);
         if (!empty) {
             cacheMap.put(key, value);
-            System.out.println("cacheMap size after put: " + cacheMap.size());
             assertFalse(cacheMap.isEmpty());
         }
         cacheMap.pin(key); //test pin
-        System.out.println("PinnedMap size after pin: " + cacheMap.getPinnedKeys().size());
         assertEquals(expectedBehaviour, cacheMap.getPinnedKeys().contains(key));
-
-        if (expectedBehaviour) {
+        if (cacheMap.getPinnedKeys().contains(key)) {
             cacheMap.unpin(key);
-            assertEquals(!expectedBehaviour, cacheMap.getPinnedKeys().contains(key));
+            assertFalse(cacheMap.getPinnedKeys().contains(key));
         }
+        assertTrue(expectedBehaviour);
     }
 
     public static class CacheMapPinTestParams {

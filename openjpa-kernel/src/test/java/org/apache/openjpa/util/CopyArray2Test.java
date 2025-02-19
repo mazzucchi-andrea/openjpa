@@ -13,12 +13,12 @@ import static org.apache.openjpa.TestMacros.PASS;
 import static org.junit.Assert.*;
 
 @RunWith(Parameterized.class)
-public class CopyArrayPrimitiveTest {
+public class CopyArray2Test {
     private static Object array;
     private static boolean expectedBehavior;
     private ProxyManagerImpl proxyManager;
 
-    public CopyArrayPrimitiveTest(ProxyManagerCopyArrayTestParams params) {
+    public CopyArray2Test(ProxyManagerCopyArrayTestParams params) {
         configure(params);
     }
 

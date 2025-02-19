@@ -1,0 +1,21 @@
+package org.apache.openjpa.util;
+
+import org.apache.openjpa.util.dummies.Dummy;
+import org.junit.Test;
+
+import static org.apache.openjpa.TestMacros.CONCURRENCY_LEVEL;
+import static org.apache.openjpa.TestMacros.LOAD;
+import static org.junit.Assert.*;
+
+public class CacheMapRemoveFromSoftMapTest {
+    @Test
+    public void removeTest() {
+        CacheMap cacheMap = new CacheMap(true, 1, 1, LOAD, CONCURRENCY_LEVEL);
+        Dummy dummy = new Dummy("Test" + 0, 0);
+        cacheMap.put(0, dummy);
+        for (int i = 1; i < 3; i++)
+            cacheMap.put(i, new Dummy("Test" + i, i));
+        Object deletedValue = cacheMap.remove(0);
+        assertEquals(dummy, deletedValue);
+    }
+}

@@ -8,16 +8,15 @@ import org.junit.runners.Parameterized;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.apache.openjpa.TestMacros.MAX;
+import static org.apache.openjpa.TestMacros.CONCURRENCY_LEVEL;
+import static org.apache.openjpa.TestMacros.LOAD;
 import static org.junit.Assert.*;
 
 @RunWith(Parameterized.class)
 public class CacheMapPutTest {
-
-    private int maxSize;
+    private boolean softMap;
     private boolean pinned; //pin a certain key
-    private boolean full;
-    private boolean over; //put something in softMap
+
 
     public CacheMapPutTest(CachePutTestParams params) {
         configure(params);
@@ -26,64 +25,51 @@ public class CacheMapPutTest {
     @Parameterized.Parameters
     public static Collection<CachePutTestParams[]> getParameters() {
         return Arrays.asList(new CachePutTestParams[][]{
-                {new CachePutTestParams(MAX, true, false, true)},
-                {new CachePutTestParams(MAX, false, false, true)},
-                {new CachePutTestParams(MAX, true, false, false)},
-                {new CachePutTestParams(MAX, false, false, false)},
-                {new CachePutTestParams(MAX, true, true, true)},
-                {new CachePutTestParams(MAX, true, true, false)},
+                {new CachePutTestParams(true, true)},
+                {new CachePutTestParams(false, true)},
+                {new CachePutTestParams(true, false)},
+                {new CachePutTestParams(false, false)},
         });
     }
 
     private void configure(CachePutTestParams params) {
-        maxSize = params.maxSize;
+        softMap = params.softMap;
         pinned = params.pinned;
-        full = params.full;
-        over = params.over;
     }
 
     @Test
     public void putTest() {
-        CacheMap cacheMap;
-        if (maxSize == 1) {
-            cacheMap = new CacheMap(true, 1, 1, .75F, 16);
-        } else {
-            cacheMap = new CacheMap(true, maxSize);
-        }
-
-        if (pinned)
+        CacheMap cacheMap = new CacheMap(true, 1, 1, LOAD, CONCURRENCY_LEVEL);
+        if (pinned) {
             cacheMap.pin(0);
-
-        int numPuts = maxSize / 2;
-        if (full)
-            numPuts = maxSize;
-        if (over)
-            numPuts = maxSize * 2;
-
-        for (int i = 0; i < numPuts; i++) {
+        }
+        cacheMap.put(0, new Dummy("Test" + 0, 0));
+        assertEquals(1, cacheMap.size());
+        if (pinned) {
+            assertEquals(0, cacheMap.softMap.size() + cacheMap.cacheMap.size());
+        }
+        int toInsert = 1;
+        if (softMap) {
+            toInsert = 2;
+            if (pinned) toInsert++;
+        }
+        for (int i = 0; i < toInsert; i++) {
             cacheMap.put(i, new Dummy("Test" + i, i));
         }
-        assertEquals(numPuts, cacheMap.size()); //check all puts
-
-        if (over) {
+        if (softMap) {
             assertFalse(cacheMap.softMap.isEmpty());
         }
-
-        if (pinned) {
-            assertTrue(cacheMap.softMap.size() + cacheMap.cacheMap.size() < numPuts);
+        for (int i = 0; i < toInsert; i++) {
+            cacheMap.put(i, new Dummy("Test" + i, i));
         }
     }
 
     public static class CachePutTestParams {
-        private final int maxSize;
-        private final boolean full;
-        private final boolean over;
+        private final boolean softMap;
         private final boolean pinned;
 
-        public CachePutTestParams(int maxSize, boolean full, boolean over, boolean pinned) {
-            this.maxSize = maxSize;
-            this.full = full;
-            this.over = over;
+        public CachePutTestParams(boolean softMap, boolean pinned) {
+            this.softMap = softMap;
             this.pinned = pinned;
         }
     }

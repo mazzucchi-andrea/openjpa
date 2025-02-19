@@ -30,10 +30,10 @@ public class CopyCustomTest {
         return Arrays.asList(new CopyCustomTestParams[][]{
                 {new CopyCustomTestParams(fillCollectionWithInteger(new HashSet<>()), PASS)},
                 {new CopyCustomTestParams(fillCollectionWithString(new LinkedList<>()), PASS)},
-                {new CopyCustomTestParams(fillCollectionWithExample(new ArrayList<>()), PASS)},
+                {new CopyCustomTestParams(fillCollectionWithDummy(new ArrayList<>()), PASS)},
                 {new CopyCustomTestParams(fillMapWithInteger(new HashMap<>()), PASS)},
                 {new CopyCustomTestParams(fillMapWithString(new HashMap<>()), PASS)},
-                {new CopyCustomTestParams(fillMapWithExample(new HashMap<>()), PASS)},
+                {new CopyCustomTestParams(fillMapWithDummy(new HashMap<>()), PASS)},
                 {new CopyCustomTestParams(null, PASS)},
                 {new CopyCustomTestParams(new Dummy("Test", 0), FAIL)},
                 {new CopyCustomTestParams(new DummyProxy(-1), PASS)},
@@ -47,7 +47,7 @@ public class CopyCustomTest {
                 {new CopyCustomTestParams(new Date(685098000000L), PASS)},
                 {new CopyCustomTestParams(new Date(), PASS)},
                 {new CopyCustomTestParams(new GregorianCalendar(TimeZone.getTimeZone("Europe/Rome")), PASS)},
-                {new CopyCustomTestParams(new GregorianCalendar(), PASS)},
+                    {new CopyCustomTestParams(new GregorianCalendar(), PASS)},
         });
     }
 
@@ -65,7 +65,7 @@ public class CopyCustomTest {
         return collection;
     }
 
-    private static Collection<Dummy> fillCollectionWithExample(Collection<Dummy> collection) {
+    private static Collection<Dummy> fillCollectionWithDummy(Collection<Dummy> collection) {
         for (int i = 0; i < NUM_ELEM; i++) {
             collection.add(new Dummy(("Test" + i), i));
         }
@@ -86,7 +86,7 @@ public class CopyCustomTest {
         return map;
     }
 
-    private static Map<Integer, Dummy> fillMapWithExample(Map<Integer, Dummy> map) {
+    private static Map<Integer, Dummy> fillMapWithDummy(Map<Integer, Dummy> map) {
         for (int i = 0; i < NUM_ELEM; i++) {
             map.put(i, new Dummy(("Test" + i), i));
         }
