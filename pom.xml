@@ -94,6 +94,7 @@
         <xbean.version>4.25</xbean.version>
         <bval.version>3.0.1</bval.version>
         <log4j2.version>2.23.1</log4j2.version>
+        <ant.version>1.10.14</ant.version>
         <jmock.version>2.13.1</jmock.version>
         <dbcp2.version>2.12.0</dbcp2.version>
         <pool2.version>2.12.0</pool2.version>
