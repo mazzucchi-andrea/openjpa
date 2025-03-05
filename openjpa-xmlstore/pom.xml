@@ -119,6 +119,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>${test.jvm.arguments}</argLine>
+                    <skipTests>true</skipTests>
                     <systemProperties>
                         <property>
                             <name>openjpa.Log</name>

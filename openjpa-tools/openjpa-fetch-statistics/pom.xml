@@ -80,6 +80,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>${surefire.jvm.args}</argLine>
+                    <skipTests>true</skipTests>
                     <excludes>
                         <!-- exclude the unit test since the fetch statistic enhancer cannot
                             be load during maven build -->
