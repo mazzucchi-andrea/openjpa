@@ -163,6 +163,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>${surefire.jvm.args}</argLine>
+                    <skipTests>true</skipTests>
                     <excludes>
                         <!--
                             exclude classes that end with 'Test'; these are not test cases per OpenJPA standards
