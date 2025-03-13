@@ -22,7 +22,9 @@
     Please keep the project tag on one line to avoid confusing
     the release plugin.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -40,7 +42,8 @@
     <description>Apache OpenJPA Examples - OpenBooks</description>
 
     <properties>
-        <checkstyle.suppressions.location>${project.basedir}${file.separator}..${file.separator}..${file.separator}openjpa-project${file.separator}suppressions.xml</checkstyle.suppressions.location>
+        <checkstyle.suppressions.location>
+            ${project.basedir}${file.separator}..${file.separator}..${file.separator}openjpa-project${file.separator}suppressions.xml</checkstyle.suppressions.location>
     </properties>
     <dependencies>
         <dependency>
@@ -133,11 +136,13 @@
                                     <target>
                                         <echo>Running OpenBooks genmodel</echo>
                                         <property name="openjpa.version" value="${project.version}" />
-                                        <property name="maven.repos" value="${settings.localRepository}" />
+                                        <property name="maven.repos"
+                                            value="${settings.localRepository}" />
                                         <ant antfile="${basedir}/build.xml">
                                             <target name="generate-canonical-model" />
                                         </ant>
                                     </target>
+                                    <skip>true</skip>
                                 </configuration>
                                 <goals>
                                     <goal>run</goal>
@@ -150,11 +155,13 @@
                                     <target>
                                         <echo>Running OpenBooks Enhance</echo>
                                         <property name="openjpa.version" value="${project.version}" />
-                                        <property name="maven.repos" value="${settings.localRepository}" />
+                                        <property name="maven.repos"
+                                            value="${settings.localRepository}" />
                                         <ant antfile="${basedir}/build.xml">
                                             <target name="enhance" />
                                         </ant>
                                     </target>
+                                    <skip>true</skip>
                                 </configuration>
                                 <goals>
                                     <goal>run</goal>
@@ -167,7 +174,8 @@
                                     <target>
                                         <echo>Running OpenBooks Generate Source</echo>
                                         <property name="openjpa.version" value="${project.version}" />
-                                        <property name="maven.repos" value="${settings.localRepository}" />
+                                        <property name="maven.repos"
+                                            value="${settings.localRepository}" />
                                         <ant antfile="${basedir}/build.xml">
                                             <target name="generate-source" />
                                         </ant>
@@ -177,6 +185,7 @@
                                             <fileset dir="${basedir}" includes="run.*" />
                                         </copy>
                                     </target>
+                                    <skip>true</skip>
                                 </configuration>
                                 <goals>
                                     <goal>run</goal>
@@ -223,11 +232,13 @@
                                     <target>
                                         <echo>Launching OpenBooks</echo>
                                         <property name="openjpa.version" value="${project.version}" />
-                                        <property name="maven.repos" value="${settings.localRepository}" />
+                                        <property name="maven.repos"
+                                            value="${settings.localRepository}" />
                                         <ant antfile="run.xml" dir="${basedir}/target">
                                             <target name="run" />
                                         </ant>
                                     </target>
+                                    <skip>true</skip>
                                 </configuration>
                                 <goals>
                                     <goal>run</goal>
@@ -241,4 +252,3 @@
 
     </profiles>
 </project>
-

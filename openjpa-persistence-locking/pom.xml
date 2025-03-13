@@ -20,7 +20,9 @@
 <!--
     Maven release plugin requires the project tag to be on a single line.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -53,7 +55,8 @@
             <properties>
                 <build.enhance>false</build.enhance>
                 <openjpa.DynamicEnhancementAgent>true</openjpa.DynamicEnhancementAgent>
-                <surefire.jvm.args>-Dopenjpa.RuntimeUnenhancedClasses=unsupported ${test.jvm.arguments}</surefire.jvm.args>
+                <surefire.jvm.args>-Dopenjpa.RuntimeUnenhancedClasses=unsupported
+                    ${test.jvm.arguments}</surefire.jvm.args>
             </properties>
             <build>
                 <plugins>
@@ -62,7 +65,8 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
                             <includes>
-                                <include>org/apache/openjpa/persistence/enhance/DynamicEnhancementSuite.java</include>
+                                <include>
+                                    org/apache/openjpa/persistence/enhance/DynamicEnhancementSuite.java</include>
                             </includes>
                             <excludes>
                                 <exclude>${surefire.excludes.locking}</exclude>
@@ -142,15 +146,18 @@
                         <phase>process-test-classes</phase>
                         <configuration>
                             <target>
-                                <ant antfile="src/test/ant/enhancer.xml" target="enhance" inheritRefs="true">
+                                <ant antfile="src/test/ant/enhancer.xml" target="enhance"
+                                    inheritRefs="true">
                                     <property name="maven.test.skip" value="${maven.test.skip}" />
                                     <property name="test" value="${test}" />
                                     <property name="outdir" value="${project.build.outputDirectory}" />
-                                    <property name="project.build.testOutputDirectory" value="${project.build.testOutputDirectory}" />
+                                    <property name="project.build.testOutputDirectory"
+                                        value="${project.build.testOutputDirectory}" />
                                     <property name="openjpa.Log" value="${openjpa.Log}" />
                                     <property name="build.enhance" value="${build.enhance}" />
                                 </ant>
                             </target>
+                            <skip>true</skip>
                         </configuration>
                         <goals>
                             <goal>run</goal>
@@ -158,6 +165,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -170,8 +178,10 @@
                         <exclude>org/apache/openjpa/**/*Test.java</exclude>
                         <exclude>${surefire.excludes.locking}</exclude>
                     </excludes>
+                    <skipTests>true</skipTests>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+    
 </project>

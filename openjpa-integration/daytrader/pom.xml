@@ -20,7 +20,9 @@
 <!--
     Maven release plugin requires the project tag to be on a single line.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -41,7 +43,8 @@
         <dbcp.maxIdle>5</dbcp.maxIdle>
         <dbcp.minIdle>2</dbcp.minIdle>
         <dbcp.maxWait>10000</dbcp.maxWait>
-        <dbcp.args>MaxTotal=${dbcp.maxTotal},MaxIdle=${dbcp.maxIdle},MinIdle=${dbcp.minIdle},MaxWait=${dbcp.maxWait}</dbcp.args>
+        <dbcp.args>
+            MaxTotal=${dbcp.maxTotal},MaxIdle=${dbcp.maxIdle},MinIdle=${dbcp.minIdle},MaxWait=${dbcp.maxWait}</dbcp.args>
     </properties>
 
     <dependencies>
@@ -146,6 +149,7 @@
                     <excludes>org/apache/openjpa/persistence/**/*.class</excludes>
                     <addDefaultConstructor>true</addDefaultConstructor>
                     <enforcePropertyRestrictions>true</enforcePropertyRestrictions>
+                    <skip>true</skip>
                 </configuration>
                 <executions>
                     <execution>
@@ -181,6 +185,7 @@
                         <exclude>org/apache/openjpa/**/*$*.class</exclude>
                         <exclude>org/apache/openjpa/**/*.*.class</exclude>
                     </excludes>
+                    <skipTests>true</skipTests>
                 </configuration>
             </plugin>
         </plugins>

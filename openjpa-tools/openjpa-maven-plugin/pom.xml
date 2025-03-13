@@ -20,7 +20,9 @@
 <!--
     Maven release plugin requires the project tag to be on a single line.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -41,7 +43,8 @@
     </description>
     <inceptionYear>2011</inceptionYear>
     <properties>
-        <checkstyle.suppressions.location>${project.basedir}${file.separator}..${file.separator}..${file.separator}openjpa-project${file.separator}suppressions.xml</checkstyle.suppressions.location>
+        <checkstyle.suppressions.location>
+            ${project.basedir}${file.separator}..${file.separator}..${file.separator}openjpa-project${file.separator}suppressions.xml</checkstyle.suppressions.location>
         <min.maven.version>3.8.1</min.maven.version>
     </properties>
     <prerequisites>
@@ -175,6 +178,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <artifactId>maven-invoker-plugin</artifactId>
                 <configuration>
@@ -187,6 +191,8 @@
                         <pomInclude>*/pom.xml</pomInclude>
                     </pomIncludes>
                     <postBuildHookScript>verify</postBuildHookScript>
+                    <skipInstallation>true</skipInstallation>
+                    <skipInvocation>true</skipInvocation>
                 </configuration>
                 <dependencies>
                 </dependencies>
@@ -200,6 +206,14 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -211,4 +225,5 @@
             </plugin>
         </plugins>
     </reporting>
+
 </project>

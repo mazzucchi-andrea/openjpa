@@ -20,7 +20,9 @@
 <!--
     Maven release plugin requires the project tag to be on a single line.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -96,14 +98,19 @@
                         <phase>compile</phase>
                         <configuration>
                             <target>
-                                <!-- SVN would have appended 'M' to the end of the revision number if there were
+                                <!-- SVN would have appended 'M' to the end of the revision number
+                                if there were
                                      uncommitted changes.  Git doesn't do that, so we have to work a bit to
                                      emulate that behavior.  -->
                                 <echo>Determining if there are uncommitted changes...</echo>
-                                <exec outputproperty="git.diff.exitval" resultproperty="diff.state" failonerror="false" failifexecutionfails="false" executable="git">
+                                <exec outputproperty="git.diff.exitval" resultproperty="diff.state"
+                                    failonerror="false" failifexecutionfails="false"
+                                    executable="git">
                                     <arg line="diff --quiet HEAD" />
                                 </exec>
-                                <exec outputproperty="git.diff.cached.exitval" resultproperty="diff.state.cached" failonerror="false" failifexecutionfails="false" executable="git">
+                                <exec outputproperty="git.diff.cached.exitval"
+                                    resultproperty="diff.state.cached" failonerror="false"
+                                    failifexecutionfails="false" executable="git">
                                     <arg line="diff --cached --quiet HEAD" />
                                 </exec>
                                 <condition property="uncommitted.changes" value="M" else="">
@@ -112,29 +119,36 @@
                                         <equals arg1="${diff.state.cached}" arg2="1" />
                                     </or>
                                 </condition>
-                                
+
                                 <echo>Getting the 'GIT' revision value</echo>
-                                <exec outputproperty="git.revision" failonerror="false" failifexecutionfails="false" executable="git">
+                                <exec outputproperty="git.revision" failonerror="false"
+                                    failifexecutionfails="false" executable="git">
                                     <arg line="rev-parse --short=7 HEAD" />
                                 </exec>
                                 <echo>Revision: ${git.revision}${uncommitted.changes}</echo>
 
                                 <echo>Getting the 'PCEnhancer' revision value</echo>
-                                <exec outputproperty="pcenhancer.git.revision" failonerror="false" failifexecutionfails="false" executable="git" append="false">
-                                    <arg line="rev-parse --short=7 HEAD:./../openjpa-kernel/src/main/java/org/apache/openjpa/enhance/PCEnhancer.java" />
+                                <exec outputproperty="pcenhancer.git.revision" failonerror="false"
+                                    failifexecutionfails="false" executable="git" append="false">
+                                    <arg
+                                        line="rev-parse --short=7 HEAD:./../openjpa-kernel/src/main/java/org/apache/openjpa/enhance/PCEnhancer.java" />
                                 </exec>
-                                <echo>openjpa.enhancer.revision=${pcenhancer.git.revision}${uncommitted.changes}</echo>
+                                <echo>
+                                    openjpa.enhancer.revision=${pcenhancer.git.revision}${uncommitted.changes}</echo>
 
                                 <echo>OpenJPA version: ${project.version}</echo>
-                                <condition property="outdir" value="${project.build.outputDirectory}" else="${java.io.tmpdir}/openjpamvntmp">
+                                <condition property="outdir"
+                                    value="${project.build.outputDirectory}"
+                                    else="${java.io.tmpdir}/openjpamvntmp">
                                     <available type="dir" file="${project.build.outputDirectory}" />
                                 </condition>
                                 <mkdir dir="${outdir}/META-INF" />
 
-                                <echo file="${outdir}/META-INF/org.apache.openjpa.revision.properties">
-revision.number=${git.revision}${uncommitted.changes}
-openjpa.version=${project.version}
-openjpa.enhancer.revision=${pcenhancer.git.revision}${uncommitted.changes}
+                                <echo
+                                    file="${outdir}/META-INF/org.apache.openjpa.revision.properties">
+                                    revision.number=${git.revision}${uncommitted.changes}
+                                    openjpa.version=${project.version}
+                                    openjpa.enhancer.revision=${pcenhancer.git.revision}${uncommitted.changes}
                                 </echo>
                             </target>
                         </configuration>
@@ -144,6 +158,14 @@ openjpa.enhancer.revision=${pcenhancer.git.revision}${uncommitted.changes}
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+    
 </project>
