@@ -45,6 +45,7 @@
         <checkstyle.suppressions.location>
             ${project.basedir}${file.separator}..${file.separator}..${file.separator}openjpa-project${file.separator}suppressions.xml</checkstyle.suppressions.location>
     </properties>
+    
     <dependencies>
         <dependency>
             <groupId>org.apache.openjpa</groupId>
@@ -251,4 +252,5 @@
         </profile>
 
     </profiles>
+
 </project>
