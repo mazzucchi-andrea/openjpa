@@ -20,13 +20,16 @@
 <!--
     Maven release plugin requires the project tag to be on a single line.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-      <groupId>org.apache</groupId>
-      <artifactId>apache</artifactId>
-      <version>29</version>
+        <groupId>org.apache</groupId>
+        <artifactId>apache</artifactId>
+        <version>29</version>
     </parent>
 
     <groupId>org.apache.openjpa</groupId>
@@ -48,7 +51,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <checkstyle.suppressions.location>openjpa-project${file.separator}suppressions.xml</checkstyle.suppressions.location>
 
-        <site.deploy.url>scp://people.apache.org/home/${site.deploy.user.name}/public_html/openjpa/${project.version}/staging-site</site.deploy.url>
+        <site.deploy.url>
+            scp://people.apache.org/home/${site.deploy.user.name}/public_html/openjpa/${project.version}/staging-site</site.deploy.url>
         <!-- the test settings can be overridden my specific profiles -->
         <test.jvm.maxheapsize>1024m</test.jvm.maxheapsize>
         <test.jvm.arguments>-Xmx${test.jvm.maxheapsize} -XX:+HeapDumpOnOutOfMemoryError</test.jvm.arguments>
@@ -60,7 +64,8 @@
         <dbcp.maxIdle>5</dbcp.maxIdle>
         <dbcp.minIdle>2</dbcp.minIdle>
         <dbcp.maxWait>10000</dbcp.maxWait>
-        <dbcp.args>MaxTotal=${dbcp.maxTotal},MaxIdle=${dbcp.maxIdle},MinIdle=${dbcp.minIdle},MaxWait=${dbcp.maxWait}</dbcp.args>
+        <dbcp.args>
+            MaxTotal=${dbcp.maxTotal},MaxIdle=${dbcp.maxIdle},MinIdle=${dbcp.minIdle},MaxWait=${dbcp.maxWait}</dbcp.args>
         <derby.locks.waitTimeout>10</derby.locks.waitTimeout>
         <derby.locks.deadlockTimeout>5</derby.locks.deadlockTimeout>
         <!-- Testcase @AllowFailure options:  ignore = silently skip test,
@@ -72,7 +77,8 @@
         <!-- By default we use DBCP2 via AutoDriverDataSource -->
         <tests.openjpa.driverDataSource>dbcp</tests.openjpa.driverDataSource>
 
-        <!--turn on sources.jar generation by setting to verify and true -->
+        <!--turn
+        on sources.jar generation by setting to verify and true -->
         <createSource>none</createSource>
         <createSources>false</createSources>
         <!-- common JDBC driver versions -->
@@ -110,6 +116,9 @@
         <jakarta.transaction-api.version>2.0.1</jakarta.transaction-api.version>
         <jakarta.validation-api.version>3.0.2</jakarta.validation-api.version>
         <jakarta.jms-api.version>3.1.0</jakarta.jms-api.version>
+
+        <sonar.organization>mazzucchi-andrea</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
     </properties>
 
@@ -165,18 +174,18 @@
     </mailingLists>
 
     <distributionManagement>
-      <site>
-        <id>people.apache.org</id>
+        <site>
+            <id>people.apache.org</id>
             <url>${site.deploy.url}</url>
-      </site>
+        </site>
     </distributionManagement>
 
     <scm>
         <connection>scm:git:https://gitbox.apache.org/repos/asf/openjpa.git</connection>
         <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/openjpa.git</developerConnection>
         <url>https://gitbox.apache.org/repos/asf/openjpa.git</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <modules>
         <module>openjpa-lib</module>
@@ -213,7 +222,8 @@
                 </property>
             </activation>
             <properties>
-                <!--turn on sources.jar generation -->
+                <!--turn
+                on sources.jar generation -->
                 <createSource>verify</createSource>
                 <createSources>true</createSources>
             </properties>
@@ -283,7 +293,9 @@
             Assumes you have the YDoc libraries locally, as well as a valid
             YDoc license file. Example usage for building the docs:
 
-            mvn process-classes -Pydoc-profile,javadoc-profile -Dydoc.home=${HOME}/.m2/privaterepos/ydoc/ydoc-2.2_04-jdk1.5 -Dydoc.license=${HOME}/.m2/privaterepos/ydoc/ydoc.license
+            mvn process-classes -Pydoc-profile,javadoc-profile
+        -Dydoc.home=${HOME}/.m2/privaterepos/ydoc/ydoc-2.2_04-jdk1.5
+        -Dydoc.license=${HOME}/.m2/privaterepos/ydoc/ydoc.license
         -->
         <profile>
             <id>ydoc-profile</id>
@@ -299,7 +311,8 @@
                     -filter ydoc.filters.ExcludeFilter
                     -filterpath ${ydoc.home}/lib/ydoc.jar
                     -doclet ydoc.doclets.YStandard
-                    -docletpath ${ydoc.home}/lib/ydoc.jar${path.separator}${ydoc.home}/lib/class2svg.jar${path.separator}${ydoc.home}/resources
+                    -docletpath
+                    ${ydoc.home}/lib/ydoc.jar${path.separator}${ydoc.home}/lib/class2svg.jar${path.separator}${ydoc.home}/resources
                     ${ydoc.params}
                 </javadoc.additionalparam>
             </properties>
@@ -365,7 +378,8 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <test.jvm.arguments>-Xmx${test.jvm.maxheapsize} -agentlib:jdwp=transport=dt_socket,server=y,address=8000</test.jvm.arguments>
+                <test.jvm.arguments>-Xmx${test.jvm.maxheapsize}
+                    -agentlib:jdwp=transport=dt_socket,server=y,address=8000</test.jvm.arguments>
             </properties>
         </profile>
 
@@ -376,8 +390,10 @@
             </activation>
             <properties>
                 <test.env>-Dtest.basedir=${basedir}/..</test.env>
-                <policy.file>${basedir}/../openjpa-persistence-jdbc/src/test/resources/j2.security.test.policy</policy.file>
-                <surefire.jvm.args>-Djava.security.manager -Djava.security.policy=${policy.file} ${test.env} ${test.jvm.arguments}</surefire.jvm.args>
+                <policy.file>
+                    ${basedir}/../openjpa-persistence-jdbc/src/test/resources/j2.security.test.policy</policy.file>
+                <surefire.jvm.args>-Djava.security.manager -Djava.security.policy=${policy.file}
+                    ${test.env} ${test.jvm.arguments}</surefire.jvm.args>
             </properties>
         </profile>
 
@@ -388,22 +404,24 @@
             </activation>
             <properties>
                 <test.env>-Dtest.basedir=${basedir}/..</test.env>
-                <policy.file>${basedir}/../openjpa-persistence-jdbc/src/test/resources/j2.security.test.policy</policy.file>
-                <surefire.jvm.args>-Djava.security.manager -Djava.security.policy=${policy.file} ${test.env} ${test.jvm.arguments}</surefire.jvm.args>
+                <policy.file>
+                    ${basedir}/../openjpa-persistence-jdbc/src/test/resources/j2.security.test.policy</policy.file>
+                <surefire.jvm.args>-Djava.security.manager -Djava.security.policy=${policy.file}
+                    ${test.env} ${test.jvm.arguments}</surefire.jvm.args>
             </properties>
             <build>
                 <plugins>
-                   <plugin>
-                       <groupId>org.apache.maven.plugins</groupId>
-                       <artifactId>maven-surefire-plugin</artifactId>
-                       <version>${maven.surefire.version}</version>
-                       <configuration>
-                           <argLine>${surefire.jvm.args}</argLine>
-                           <includes>
-                               <include />
-                           </includes>
-                       </configuration>
-                   </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven.surefire.version}</version>
+                        <configuration>
+                            <argLine>${surefire.jvm.args}</argLine>
+                            <includes>
+                                <include />
+                            </includes>
+                        </configuration>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
@@ -421,9 +439,9 @@
             <id>test-derby</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
-            <property>
-                <name>test-derby</name>
-            </property>
+                <property>
+                    <name>test-derby</name>
+                </property>
             </activation>
             <dependencies>
                 <dependency>
@@ -568,7 +586,8 @@
                 </dependency>
             </dependencies>
             <properties>
-                <openjpa.derbynet.url>jdbc:derby://localhost:1527/openjpa20;create=true;traceDirectory=target;traceFile=derby.log</openjpa.derbynet.url>
+                <openjpa.derbynet.url>
+                    jdbc:derby://localhost:1527/openjpa20;create=true;traceDirectory=target;traceFile=derby.log</openjpa.derbynet.url>
                 <openjpa.derbynet.driver>org.apache.derby.jdbc.ClientDriver</openjpa.derbynet.driver>
                 <!-- Note: commons-dbcp2 requires dummy values for uid/pwd -->
                 <openjpa.derbynet.username>uid</openjpa.derbynet.username>
@@ -658,7 +677,8 @@
                 <!-- default settings for local docker -->
                 <docker.external.mysql.port>3306</docker.external.mysql.port>
                 <openjpa.mysql.dbname>openjpatst</openjpa.mysql.dbname>
-                <openjpa.mysql.url>jdbc:mysql://localhost:${docker.external.mysql.port}/${openjpa.mysql.dbname}?useSSL=false</openjpa.mysql.url>
+                <openjpa.mysql.url>
+                    jdbc:mysql://localhost:${docker.external.mysql.port}/${openjpa.mysql.dbname}?useSSL=false</openjpa.mysql.url>
                 <openjpa.mysql.username>openjpatst</openjpa.mysql.username>
                 <openjpa.mysql.password>openjpatst</openjpa.mysql.password>
 
@@ -753,7 +773,8 @@
                 <!-- default settings for local docker -->
                 <docker.external.mariadb.port>3306</docker.external.mariadb.port>
                 <openjpa.mariadb.dbname>openjpatst</openjpa.mariadb.dbname>
-                <openjpa.mariadb.url>jdbc:mariadb://localhost:${docker.external.mariadb.port}/${openjpa.mariadb.dbname}</openjpa.mariadb.url>
+                <openjpa.mariadb.url>
+                    jdbc:mariadb://localhost:${docker.external.mariadb.port}/${openjpa.mariadb.dbname}</openjpa.mariadb.url>
                 <openjpa.mariadb.username>root</openjpa.mariadb.username>
                 <openjpa.mariadb.password>openjpatst</openjpa.mariadb.password>
 
@@ -855,7 +876,8 @@
                 <openjpa.postgresql.dbname>openjpatst</openjpa.postgresql.dbname>
                 <openjpa.postgresql.username>postgres</openjpa.postgresql.username>
                 <openjpa.postgresql.password>postgres</openjpa.postgresql.password>
-                <openjpa.postgresql.url>jdbc:postgresql://localhost:${docker.external.postgresql.port}/${openjpa.postgresql.dbname}</openjpa.postgresql.url>
+                <openjpa.postgresql.url>
+                    jdbc:postgresql://localhost:${docker.external.postgresql.port}/${openjpa.postgresql.dbname}</openjpa.postgresql.url>
 
                 <!--<connection.url>jdbc:postgresql://localhost/openjpa</connection.url>-->
                 <connection.url>${openjpa.postgresql.url}</connection.url>
@@ -1000,7 +1022,8 @@
                   * sendTimeAsDatetime=false is important to make SQLServer understand java.sql.Time parameters.
                   * Alternatively you can set the SQLServerDictionary parameter sendTimeAsString=true
                  -->
-                <openjpa.mssql.url>jdbc:sqlserver://localhost:${docker.external.mssql.port};sendTimeAsDatetime=false</openjpa.mssql.url>
+                <openjpa.mssql.url>
+                    jdbc:sqlserver://localhost:${docker.external.mssql.port};sendTimeAsDatetime=false</openjpa.mssql.url>
 
                 <!--<connection.url>jdbc:postgresql://localhost/openjpa</connection.url>-->
                 <connection.url>${openjpa.mssql.url}</connection.url>
@@ -1027,7 +1050,8 @@
                                     <name>mcr.microsoft.com/mssql/server:${mssql.server.version}</name>
                                     <run>
                                         <env>
-                                            <!-- For more info on the EULA see https://go.microsoft.com/fwlink/?LinkId=746388 -->
+                                            <!-- For more info on the EULA see
+                                            https://go.microsoft.com/fwlink/?LinkId=746388 -->
                                             <ACCEPT_EULA>Y</ACCEPT_EULA>
                                             <SA_PASSWORD>${connection.password}</SA_PASSWORD>
                                         </env>
@@ -1520,7 +1544,7 @@
                                              -Dpackaging=jar
 
                 You must also set the following properties:
-                    -Dopenjpa.ids.url=jdbc:informix-sqli://<HOST>:<PORT>:informixserver=<INFORMIXSERVER>;database=<DBNAME>
+            -Dopenjpa.ids.url=jdbc:informix-sqli://<HOST>:<PORT>:informixserver=<INFORMIXSERVER>;database=<DBNAME>
                     -Dopenjpa.ids.username=<ids_uid>
                     -Dopenjpa.ids.password=<ids_pwd>
 
@@ -1611,7 +1635,8 @@
                 <openjpa.oracle.username>openjpatst</openjpa.oracle.username>
                 <openjpa.oracle.password>openjpatst</openjpa.oracle.password>
                 <openjpa.oracle.SID>xe</openjpa.oracle.SID>
-                <openjpa.oracle.url>jdbc:oracle:thin:@localhost:${docker.external.oracle.port}:${openjpa.oracle.SID}</openjpa.oracle.url>
+                <openjpa.oracle.url>
+                    jdbc:oracle:thin:@localhost:${docker.external.oracle.port}:${openjpa.oracle.SID}</openjpa.oracle.url>
 
                 <connection.url>${openjpa.oracle.url}</connection.url>
                 <connection.username>${openjpa.oracle.username}</connection.username>
@@ -1648,7 +1673,8 @@
                                     <run>
                                         <volumes>
                                             <bind>
-                                                <volume>${project.basedir}/src/test/sql/oracle-docker:/docker-entrypoint-initdb.d/</volume>
+                                                <volume>
+                                                    ${project.basedir}/src/test/sql/oracle-docker:/docker-entrypoint-initdb.d/</volume>
                                             </bind>
                                         </volumes>
                                         <ports>
@@ -1871,14 +1897,14 @@
             </dependency>
 
             <dependency>
-              <groupId>io.fabric8</groupId>
-              <artifactId>kubernetes-client</artifactId>
-              <version>${kubernetes-client.version}</version>
+                <groupId>io.fabric8</groupId>
+                <artifactId>kubernetes-client</artifactId>
+                <version>${kubernetes-client.version}</version>
             </dependency>
             <dependency>
-              <groupId>io.fabric8</groupId>
-              <artifactId>kubernetes-server-mock</artifactId>
-              <version>${kubernetes-client.version}</version>
+                <groupId>io.fabric8</groupId>
+                <artifactId>kubernetes-server-mock</artifactId>
+                <version>${kubernetes-client.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -1988,60 +2014,60 @@
                                  are not test cases per OpenJPA standards -->
                             <exclude>org/apache/openjpa/**/*$*.class</exclude>
                         </excludes>
-                    <systemProperties>
-                        <property>
-                            <name>openjpa.Log</name>
-                            <value>${openjpa.Log}</value>
-                        </property>
-                        <property>
-                            <name>openjpa.DynamicEnhancementAgent</name>
-                            <value>${openjpa.DynamicEnhancementAgent}</value>
-                        </property>
-                        <property>
-                            <name>openjpa.ConnectionDriverName</name>
-                            <value>${connection.driver.name}</value>
-                        </property>
-                        <property>
-                            <name>openjpa.ConnectionURL</name>
-                            <value>${connection.url}</value>
-                        </property>
-                        <property>
-                            <name>openjpa.ConnectionUserName</name>
-                            <value>${connection.username}</value>
-                        </property>
-                        <property>
-                            <name>openjpa.ConnectionPassword</name>
-                            <value>${connection.password}</value>
-                        </property>
-                        <property>
-                            <name>openjpa.jdbc.DBDictionary</name>
-                            <value>${jdbc.DBDictionary}</value>
-                        </property>
-                        <property>
-                            <name>derby.stream.error.file</name>
-                            <value>target/derby.log</value>
-                        </property>
-                        <property>
-                            <name>derby.locks.deadlockTimeout</name>
-                            <value>${derby.locks.deadlockTimeout}</value>
-                        </property>
-                        <property>
-                            <name>derby.locks.waitTimeout</name>
-                            <value>${derby.locks.waitTimeout}</value>
-                        </property>
-                        <property>
-                            <name>openjpa.ConnectionProperties</name>
-                            <value>${dbcp.args}</value>
-                        </property>
-                        <property>
-                            <name>tests.openjpa.allowfailure</name>
-                            <value>${tests.openjpa.allowfailure}</value>
-                        </property>
-                        <property>
-                            <name>openjpa.jdbc.DriverDataSource</name>
-                            <value>${tests.openjpa.driverDataSource}</value>
-                        </property>
-                    </systemProperties>
+                        <systemProperties>
+                            <property>
+                                <name>openjpa.Log</name>
+                                <value>${openjpa.Log}</value>
+                            </property>
+                            <property>
+                                <name>openjpa.DynamicEnhancementAgent</name>
+                                <value>${openjpa.DynamicEnhancementAgent}</value>
+                            </property>
+                            <property>
+                                <name>openjpa.ConnectionDriverName</name>
+                                <value>${connection.driver.name}</value>
+                            </property>
+                            <property>
+                                <name>openjpa.ConnectionURL</name>
+                                <value>${connection.url}</value>
+                            </property>
+                            <property>
+                                <name>openjpa.ConnectionUserName</name>
+                                <value>${connection.username}</value>
+                            </property>
+                            <property>
+                                <name>openjpa.ConnectionPassword</name>
+                                <value>${connection.password}</value>
+                            </property>
+                            <property>
+                                <name>openjpa.jdbc.DBDictionary</name>
+                                <value>${jdbc.DBDictionary}</value>
+                            </property>
+                            <property>
+                                <name>derby.stream.error.file</name>
+                                <value>target/derby.log</value>
+                            </property>
+                            <property>
+                                <name>derby.locks.deadlockTimeout</name>
+                                <value>${derby.locks.deadlockTimeout}</value>
+                            </property>
+                            <property>
+                                <name>derby.locks.waitTimeout</name>
+                                <value>${derby.locks.waitTimeout}</value>
+                            </property>
+                            <property>
+                                <name>openjpa.ConnectionProperties</name>
+                                <value>${dbcp.args}</value>
+                            </property>
+                            <property>
+                                <name>tests.openjpa.allowfailure</name>
+                                <value>${tests.openjpa.allowfailure}</value>
+                            </property>
+                            <property>
+                                <name>openjpa.jdbc.DriverDataSource</name>
+                                <value>${tests.openjpa.driverDataSource}</value>
+                            </property>
+                        </systemProperties>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -2097,7 +2123,8 @@
                         <tagNameFormat>@{project.version}</tagNameFormat>
 
                         <!--
-                            The openbooks example contains a build.xml which tries to add ~/.m2/repository/../openjpa-all-nnn.jar
+                            The openbooks example contains a build.xml which tries to add
+                        ~/.m2/repository/../openjpa-all-nnn.jar
                             to the classpath. But since the maven-release-plugin by default only prepares with 'clean verify'
                             the jar doesn't end in the local m2 repo. It will only be in the opanjpa-all/target folder.
                             For now I forced an 'install', but we should ultimately just fix the openbooks example.
@@ -2165,7 +2192,7 @@
                             <configuration>
                                 <archive>
                                     <manifest>
-                                       <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                        <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                                     </manifest>
                                     <manifestEntries>
                                         <Implementation-Build>${buildNumber}</Implementation-Build>
@@ -2267,18 +2294,23 @@
                                     </module>
                                     <module name="TreeWalker">
                                         <module name="RegexpSinglelineJava">
-                                            <property name="format" value="System\.(out|err)\.print(ln)?\(" />
+                                            <property name="format"
+                                                value="System\.(out|err)\.print(ln)?\(" />
                                             <property name="ignoreComments" value="true" />
                                         </module>
                                         <module name="SuppressionCommentFilter">
-                                            <property name="offCommentFormat" value="// START - ALLOW PRINT STATEMENTS" />
-                                            <property name="onCommentFormat" value="// STOP - ALLOW PRINT STATEMENTS" />
+                                            <property name="offCommentFormat"
+                                                value="// START - ALLOW PRINT STATEMENTS" />
+                                            <property name="onCommentFormat"
+                                                value="// STOP - ALLOW PRINT STATEMENTS" />
                                         </module>
                                     </module>
 
-                                    <!-- File location is specified in root pom.xml via ${checkstyle.suppressions.location} -->
+                                    <!-- File location is specified in root pom.xml via
+                                    ${checkstyle.suppressions.location} -->
                                     <module name="SuppressionFilter">
-                                        <property name="file" value="${checkstyle.suppressions.location}" />
+                                        <property name="file"
+                                            value="${checkstyle.suppressions.location}" />
                                         <property name="optional" value="true" />
                                     </module>
                                 </module>
