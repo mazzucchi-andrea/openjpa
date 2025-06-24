@@ -20,7 +20,8 @@
 <!--
     Maven release plugin requires the project tag to be on a single line.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -40,19 +41,6 @@
             <groupId>org.apache.openjpa</groupId>
             <artifactId>openjpa-kernel</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.openjpa</groupId>
-            <artifactId>openjpa-persistence-jdbc</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.openjpa</groupId>
-            <artifactId>openjpa-persistence-jdbc</artifactId>
-            <version>${project.version}</version>
-            <type>test-jar</type>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -83,35 +71,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-
-            <!-- new way of using openjpa-maven-plugin to enhance classes -->
-            <plugin>
-                <groupId>org.apache.openjpa</groupId>
-                <artifactId>openjpa-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>org/apache/openjpa/xmlstore/**/Test*.class</excludes>
-                    <excludes>org/apache/openjpa/persistence/**/*.class</excludes>
-                    <addDefaultConstructor>true</addDefaultConstructor>
-                    <enforcePropertyRestrictions>true</enforcePropertyRestrictions>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>enhancer</id>
-                        <phase>process-test-classes</phase>
-                        <goals>
-                            <goal>test-enhance</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <!-- use o-p-j instead of openjpa to avoid cyclical dependency in maven graph -->
-                    <dependency>
-                        <groupId>org.apache.openjpa</groupId>
-                        <artifactId>openjpa-persistence-jdbc</artifactId>
-                        <version>${project.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
 
             <plugin>

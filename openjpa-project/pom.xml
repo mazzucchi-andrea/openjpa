@@ -331,48 +331,6 @@
             </activation>
 
         </profile>
-        <!--
-          Upload distribution files, javadoc and manual to openjpa.apache.org/builds/${nightly.version}.
-          This profile is designed to be run nightly by a continuous build server, but can
-          also be run manually.
-
-          The nightly.user.name and nightly.password properties need to be set prior to using
-          this profile, ie :
-          $ mvn -Dnightly.user.name=mikedd -Dnightly.password=mikesPassword -Pnightly-upload package
-          or (using a profile defined in $user.home/.m2/settings.xml )
-          $ mvn -Pnightly-upload,mikes-nightly-credentials package
-          -->
-        <profile>
-            <id>nightly-upload</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <configuration>
-                                    <target>
-                                        <ant antfile="upload.xml" target="upload" inheritRefs="true">
-                                            <property name="nightly.user.name" value="${nightly.user.name}" />
-                                            <property name="nightly.password" value="${nightly.password}" />
-                                            <property name="nightly.keyfile" value="${nightly.keyfile}" />
-                                            <property name="nightly.passphrase" value="${nightly.passphrase}" />
-                                            <property name="nightly.version" value="${nightly.version}" />
-                                            <property name="project.version" value="${project.version}" />
-                                        </ant>
-                                    </target>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
     </profiles>
 
     <!-- need to explicitly list dependencies for assembly to work -->

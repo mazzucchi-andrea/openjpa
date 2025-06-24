@@ -284,7 +284,7 @@ public class CacheMap
      * the map are not counted towards the maximum cache size, and are never
      * evicted implicitly. You may pin keys for which no value is in the map.
      *
-     * @return true if the givne key's value was pinned; false if no value
+     * @return true if the given key's value was pinned; false if no value
      * for the given key is cached
      */
     public boolean pin(Object key) {

@@ -20,7 +20,8 @@
 <!--
     Maven release plugin requires the project tag to be on a single line.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -53,11 +54,7 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.apache.ant</groupId>
-            <artifactId>ant</artifactId>
-            <scope>provided</scope>
-        </dependency>
+
         <!-- for osgi ManagedRuntime implementation, -->
         <!-- we pull in OSGi core at the same level as Apache Aries -->
         <dependency>
@@ -86,6 +83,20 @@
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.13.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.12.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -110,38 +121,6 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-          <!--          <execution>
-                        <id>add-was-interfaces</id>
-                        <phase>process-classes</phase>
-                        <configuration>
-                            <target>
-                                <java classname="org.apache.openjpa.ee.WASManagedRuntime" classpathref="maven.runtime.classpath" />
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>-->
-                    <execution>
-                        <id>generate-standard-sco-proxies</id>
-                        <phase>process-classes</phase>
-                        <configuration>
-                            <target>
-                                <java classname="org.apache.openjpa.util.ProxyManagerImpl" classpathref="maven.runtime.classpath">
-                                    <arg line="-utils 5" />
-                                </java>
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <executions>
                     <execution>
@@ -157,7 +136,7 @@
                             </excludes>
                             <archive>
                                 <manifest>
-                                   <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                                 </manifest>
                                 <manifestEntries>
                                     <Implementation-Build>${buildNumber}</Implementation-Build>
@@ -170,6 +149,24 @@
                         <id>attach-tests</id>
                         <goals>
                             <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
                         </goals>
                     </execution>
                 </executions>
