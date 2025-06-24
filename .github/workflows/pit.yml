@@ -33,7 +33,9 @@ jobs:
           path: ~/.m2
           key: 'cache'
           restore-keys: 'cache'
-      - name: 'Build with Maven'
+      - name: 'Build with Maven'ù
+        run: mvn clean install
+      - name: PIT
         run: mvn test-compile org.pitest:pitest-maven:mutationCoverage -pl openjpa-kernel
       - name: Create staging directory for PIT Reports
         run: mkdir staging && cp -r openjpa-kernel/target/pit-reports staging
