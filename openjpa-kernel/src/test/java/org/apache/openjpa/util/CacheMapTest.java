@@ -8,6 +8,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,8 +21,14 @@ class CacheMapTest {
     public static final int SIZE = MAX / 2;
     public static final float LOAD = .75F;
     public static final int CONCURRENCY_LEVEL = 16;
+    private static final int NUM_ELEM = 10;
 
     private CacheMap cacheMap;
+
+    @BeforeEach
+    void setup() {
+        cacheMap = new CacheMap(true, MAX, SIZE, LOAD, CONCURRENCY_LEVEL);
+    }
 
     public static Stream<Arguments> provideDataRemoveTest() {
         return Stream.of(
@@ -56,9 +65,104 @@ class CacheMapTest {
 
     }
 
-    @BeforeEach
-    void setup() {
-        cacheMap = new CacheMap(true, MAX, SIZE, LOAD, CONCURRENCY_LEVEL);
+    public static Stream<Arguments> provideDataPutTest() {
+        return Stream.of(
+                Arguments.of(1, 1),
+                Arguments.of(1L, 1),
+                Arguments.of("k1", 1),
+                Arguments.of(1, 1L),
+                Arguments.of(1L, 1L),
+                Arguments.of("k1", 1L),
+                Arguments.of(1, "v1"),
+                Arguments.of(1L, "v1"),
+                Arguments.of("k1", "v1"),
+                Arguments.of(1, null),
+                Arguments.of(1L, null),
+                Arguments.of("k1", null),
+                Arguments.of(0, new Dummy("Test" + 0, 0)),
+                Arguments.of(null, 1)
+        );
+    }
+
+    static Stream<Arguments> provideDataPutAllTest() {
+        return Stream.of(
+                Arguments.of(fillMapWithInteger(new HashMap<>())),
+                Arguments.of(fillMapWithString(new HashMap<>())),
+                Arguments.of(fillMapWithDummy(new HashMap<>()))
+        );
+    }
+
+    private static Map<Integer, String> fillMapWithString(Map<Integer, String> map) {
+        for (int i = 0; i < NUM_ELEM; i++) {
+            map.put(i, ("Test" + i));
+        }
+        return map;
+    }
+
+    private static Map<Integer, Integer> fillMapWithInteger(Map<Integer, Integer> map) {
+        for (int i = 0; i < NUM_ELEM; i++) {
+            map.put(i, i);
+        }
+        return map;
+    }
+
+    private static Map<Integer, Dummy> fillMapWithDummy(Map<Integer, Dummy> map) {
+        for (int i = 0; i < NUM_ELEM; i++) {
+            map.put(i, new Dummy(("Test" + i), i));
+        }
+        return map;
+    }
+
+    private boolean assertMap(Map<?, ?> orig, Map<?, ?> copy) {
+        if (orig.size() != copy.size()) {
+            return false; // Different sizes = Not equal
+        }
+
+        for (Map.Entry<?, ?> entry : orig.entrySet()) {
+            Object key = entry.getKey();
+            Object origValue = entry.getValue();
+            Object copyValue = copy.get(key);
+
+            // If key is missing in copy
+            if (!copy.containsKey(key)) {
+                return false;
+            }
+
+            // Special handling for Example class
+            if (origValue instanceof Dummy && copyValue instanceof Dummy) {
+                Dummy o = (Dummy) origValue;
+                Dummy c = (Dummy) copyValue;
+                if (!o.getStr().equals(c.getStr()) || o.getI() != c.getI()) {
+                    return false;
+                }
+            }
+            // Use standard equals() for other types
+            else if (!Objects.equals(origValue, copyValue)) {
+                return false;
+            }
+        }
+
+        return true; // If all keys and values match
+    }
+
+    // put/get
+
+    @ParameterizedTest
+    @MethodSource("provideDataPutTest")
+    void put_getTest(Object key, Object value) {
+        cacheMap.put(key, value);
+        assertEquals(value, cacheMap.get(key));
+        assertEquals(1, cacheMap.size());
+    }
+
+    // putAll
+
+    @ParameterizedTest
+    @MethodSource("provideDataPutAllTest")
+    void putAllTest(Map<?, ?> map) {
+        cacheMap.putAll(map);
+        assertEquals(map.size(), cacheMap.size());
+        assertTrue(assertMap(map, cacheMap.cacheMap));
     }
 
     // remove
@@ -72,15 +176,15 @@ class CacheMapTest {
         if (pinned) {
             cacheMap.pin(key);
         }
-        Object deletedValue = cacheMap.remove(key);
+        Object removedValue = cacheMap.remove(key);
         assertTrue(cacheMap.isEmpty());
         if (pinned) {
             assertEquals(1, cacheMap.getPinnedKeys().size());
         }
         if (!empty) {
-            assertEquals(value, deletedValue);
+            assertEquals(value, removedValue);
         } else {
-            assertNull(deletedValue);
+            assertNull(removedValue);
         }
         Object val = cacheMap.get(key);
         assertNull(val);
@@ -118,5 +222,4 @@ class CacheMapTest {
 
         assertTrue(cacheMap.getPinnedKeys().contains(0));
     }
-
 }

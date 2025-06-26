@@ -1,6 +1,7 @@
 package org.apache.openjpa.util;
 
 import org.apache.openjpa.util.dummies.Dummy;
+import org.apache.openjpa.util.dummies.DummyBean;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
@@ -30,6 +31,7 @@ class CacheMapSoftMapTest {
     @BeforeEach
     void setup() {
         cacheMap = new CacheMap(true, 1, 1, LOAD, CONCURRENCY_LEVEL);
+        cacheMap.setSoftReferenceSize(1);
     }
 
     @Test
@@ -39,18 +41,21 @@ class CacheMapSoftMapTest {
         for (int i = 1; i < 3; i++) {
             cacheMap.put(i, new Dummy("Test" + i, i));
         }
+        assertTrue(cacheMap.softMap.containsKey(0));
         Object deletedValue = cacheMap.remove(0);
         assertEquals(dummy, deletedValue);
     }
 
+    // put/get
+
     @ParameterizedTest
     @MethodSource("provideDataPutTest")
-    void putTest(boolean softMap, boolean pinned) {
+    void put_getTest(boolean softMap, boolean pinned) {
         if (pinned) {
             cacheMap.pin(0);
         }
         assertTrue(cacheMap.isEmpty());
-        cacheMap.put(0, new Dummy("Test" + 0, 0));
+        cacheMap.put(0, new DummyBean("Test" + 0, 0, false));
         assertEquals(1, cacheMap.size());
         if (pinned) {
             assertEquals(0, cacheMap.softMap.size() + cacheMap.cacheMap.size());
@@ -62,14 +67,16 @@ class CacheMapSoftMapTest {
             if (pinned) toInsert++;
         }
         for (int i = 0; i < toInsert; i++) {
-            cacheMap.put(i, new Dummy("Test" + i, i));
+            cacheMap.put(i, new DummyBean("Test" + i, i, false));
         }
         assertEquals(toInsert, cacheMap.size());
         if (softMap) {
             assertFalse(cacheMap.softMap.isEmpty());
         }
         for (int i = 0; i < toInsert; i++) {
-            cacheMap.put(i, new Dummy("Test" + i, i));
+            DummyBean bean = new DummyBean("Test" + i, i, false);
+            cacheMap.put(i, bean);
+            assertEquals(bean, cacheMap.get(i));
         }
         assertEquals(toInsert, cacheMap.size());
     }

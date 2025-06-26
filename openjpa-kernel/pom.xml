@@ -36,20 +36,29 @@
     <name>OpenJPA Kernel</name>
     <description>OpenJPA Kernel</description>
 
+    <properties>
+        <junit5.version>5.13.1</junit5.version>
+        <pitest.version>1.20.0</pitest.version>
+        <pitest-junit5-plugin.version>1.2.3</pitest-junit5-plugin.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.openjpa</groupId>
             <artifactId>openjpa-lib</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>jakarta.jms</groupId>
             <artifactId>jakarta.jms-api</artifactId>
         </dependency>
+
         <dependency>
             <groupId>jakarta.transaction</groupId>
             <artifactId>jakarta.transaction-api</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
@@ -87,38 +96,36 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.13.1</version>
+            <version>${junit5.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
-            <version>5.13.1</version>
+            <version>${junit5.version}</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.13.1</version>
+            <version>${junit5.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>
-            <version>5.13.1</version>
+            <version>${junit5.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.pitest</groupId>
             <artifactId>pitest-junit5-plugin</artifactId>
-            <version>1.2.3</version>
+            <version>${pitest-junit5-plugin.version}</version>
         </dependency>
-
-
-
     </dependencies>
 
     <build>
@@ -141,6 +148,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -175,6 +183,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -193,10 +202,11 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
-                <version>1.20.0</version>
+                <version>${pitest.version}</version>
                 <configuration>
                     <targetClasses>
                         <param>org.apache.openjpa.util.ProxyManagerImpl</param>
@@ -206,5 +216,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

@@ -37,7 +37,9 @@ class ProxyManagerImplTest {
                 Arguments.of(new Date(685098000000L)),
                 Arguments.of(new Date()),
                 Arguments.of(new GregorianCalendar(TimeZone.getTimeZone("Europe/Rome"))),
-                Arguments.of(new GregorianCalendar())
+                Arguments.of(new GregorianCalendar()),
+                Arguments.of(Calendar.getInstance()),
+                Arguments.of(Calendar.getInstance(Locale.forLanguageTag("jp")))
         );
     }
 
@@ -55,6 +57,30 @@ class ProxyManagerImplTest {
                 Arguments.of(fillCollectionWithInteger(new HashSet<>())),
                 Arguments.of(fillCollectionWithString(new LinkedList<>())),
                 Arguments.of(fillCollectionWithDummy(new ArrayList<>()))
+        );
+    }
+
+    private static Stream<Arguments> provideDataCopyMapTest() {
+        return Stream.of(
+                Arguments.of(fillMapWithInteger(new HashMap<>())),
+                Arguments.of(fillMapWithString(new TreeMap<>())),
+                Arguments.of(fillMapWithDummy(new LinkedHashMap<>()))
+        );
+    }
+
+    private static Stream<Arguments> provideDataCopyDateTest() {
+        return Stream.of(
+                Arguments.of(new Date(685098000000L)),
+                Arguments.of(new Date())
+        );
+    }
+
+    private static Stream<Arguments> provideDataCopyCalendarTest() {
+        return Stream.of(
+                Arguments.of(new GregorianCalendar(TimeZone.getTimeZone("Europe/Rome"))),
+                Arguments.of(new GregorianCalendar()),
+                Arguments.of(Calendar.getInstance()),
+                Arguments.of(Calendar.getInstance(Locale.forLanguageTag("jp")))
         );
     }
 
@@ -105,6 +131,119 @@ class ProxyManagerImplTest {
         proxyManager = new ProxyManagerImpl();
     }
 
+    // copyArray
+
+    @Test
+    void copyArrayTest() {
+        Integer[] intArray = new Integer[]{1, 2, 3};
+        Integer[] empty = new Integer[3];
+        Object[] objArray = new Object[]{1, 2L, null, "Test"};
+
+        Object copy = proxyManager.copyArray(intArray);
+        assertArrayEquals(intArray, (Integer[]) copy);
+
+        copy = proxyManager.copyArray(empty);
+        assertArrayEquals(empty, (Integer[]) copy);
+
+        copy = proxyManager.copyArray(objArray);
+        assertArrayEquals(objArray, (Object[]) copy);
+
+        copy = proxyManager.copyArray(null);
+        assertNull(copy);
+
+        assertThrows(Exception.class, () -> proxyManager.copyArray(""));
+
+        assertThrows(Exception.class, () -> proxyManager.copyArray("Test"));
+    }
+
+    // copyCollection
+
+    @ParameterizedTest
+    @MethodSource("provideDataCopyCollectionTest")
+    void copyCollectionTest(Collection<?> collection) {
+        Collection<?> copy = proxyManager.copyCollection(collection);
+        assertIterableEquals(collection, copy);
+    }
+
+    @Test
+    void copyCollectionProxyTest() {
+        Proxy proxy = proxyManager.newCollectionProxy(List.class, Integer.class, null, false);
+        Collection<?> copy = proxyManager.copyCollection((Collection<?>) proxy);
+        assertIterableEquals((Collection<?>) proxy, copy);
+    }
+
+    @Test
+    void copyCollectionNullTest() {
+        Object copy = proxyManager.copyCollection(null);
+        assertNull(copy);
+    }
+
+    // copyMap
+
+    @ParameterizedTest
+    @MethodSource("provideDataCopyMapTest")
+    void copyMapTest(Map<?, ?> map) {
+        Map<?, ?> copy = proxyManager.copyMap(map);
+        assertTrue(assertMap(map, copy));
+    }
+
+    @Test
+    void copyMapProxyTest() {
+        Proxy proxy = proxyManager.newMapProxy(HashMap.class, Integer.class, Integer.class, null, false);
+        Map<?, ?> copy = proxyManager.copyMap((Map<?, ?>) proxy);
+        assertTrue(assertMap((Map<?, ?>) proxy, copy));
+    }
+
+    @Test
+    void copyMapNull() {
+        Object copy = proxyManager.copyMap(null);
+        assertNull(copy);
+    }
+
+    // copyDate
+
+    @ParameterizedTest
+    @MethodSource("provideDataCopyDateTest")
+    void copyDateTest(Date date) {
+        Date copy = proxyManager.copyDate(date);
+        assertEquals(date, copy);
+    }
+
+    @Test
+    void copyDateProxyTest() {
+        Proxy proxy = proxyManager.newDateProxy(Date.class);
+        Date copy = proxyManager.copyDate((Date) proxy);
+        assertEquals(proxy, copy);
+    }
+
+    @Test
+    void copyDateNullTest() {
+        Object copy = proxyManager.copyDate(null);
+        assertNull(copy);
+    }
+
+    // copyCalendar
+
+    @ParameterizedTest
+    @MethodSource("provideDataCopyCalendarTest")
+    void copyCalendarTest(Calendar calendar) {
+        Calendar copy = proxyManager.copyCalendar(calendar);
+        assertEquals(calendar, copy);
+    }
+
+    @Test
+    void copyCalendarProxyTest() {
+        Proxy proxy = proxyManager.newCalendarProxy(GregorianCalendar.class, TimeZone.getTimeZone("Europe/Rome"));
+        Calendar copy = proxyManager.copyCalendar((Calendar) proxy);
+        assertEquals(proxy, copy);
+    }
+
+    @Test
+    void copyCalendarNull() {
+        Object copy = proxyManager.copyCalendar(null);
+        assertNull(copy);
+    }
+
     // copyCustom
 
     @ParameterizedTest
@@ -134,90 +273,6 @@ class ProxyManagerImplTest {
     @Test
     void copyCustomNull() {
         Object copy = proxyManager.copyCustom(null);
-        assertNull(copy);
-    }
-
-    // copyArray
-
-    @Test
-    void copyArrayTest() {
-        Integer[] intArray = new Integer[]{1, 2, 3};
-        Integer[] empty = new Integer[3];
-        Object[] objArray = new Object[]{1, 2L, null, "Test"};
-
-        Object copy = proxyManager.copyArray(intArray);
-        assertArrayEquals(intArray, (Integer[]) copy);
-
-        copy = proxyManager.copyArray(empty);
-        assertArrayEquals(empty, (Integer[]) copy);
-
-        copy = proxyManager.copyArray(objArray);
-        assertArrayEquals(objArray, (Object[]) copy);
-
-        copy = proxyManager.copyArray(null);
-        assertNull(copy);
-
-        assertThrows(Exception.class, () -> proxyManager.copyArray(""));
-
-        assertThrows(Exception.class, () -> proxyManager.copyArray("Test"));
-    }
-
-    @Test
-    void copyArrayNull() {
-        Object copy = proxyManager.copyArray(null);
-        assertNull(copy);
-    }
-
-    // copyCollection
-
-    @ParameterizedTest
-    @MethodSource("provideDataCopyCollectionTest")
-    void copyCollectionTest(Collection<?> collection) {
-        Collection<?> copy = proxyManager.copyCollection(collection);
-        assertIterableEquals(collection, copy);
-    }
-
-    @Test
-    void copyCollectionProxyTest() {
-        Proxy proxy = proxyManager.newCollectionProxy(List.class, Integer.class, null, false);
-        Collection<?> copy = proxyManager.copyCollection((Collection<?>) proxy);
-        assertIterableEquals((Collection <?>) proxy, copy);
-    }
-
-    @Test
-    void copyCollectionNull() {
-        Object copy = proxyManager.copyCollection(null);
-        assertNull(copy);
-    }
-
-    // copyMap
-
-    @Test
-    void copyMapProxyTest() {
-        Proxy proxy = proxyManager.newMapProxy(HashMap.class, Integer.class, Integer.class, null, false);
-        Map<?,?> copy = proxyManager.copyMap((Map<?,?>) proxy);
-        assertTrue(assertMap((Map<?,?>) proxy, copy));
-    }
-
-    @Test
-    void copyMapNull() {
-        Object copy = proxyManager.copyMap(null);
-        assertNull(copy);
-    }
-
-    // copyDate
-
-    @Test
-    void copyDateNull() {
-        Object copy = proxyManager.copyDate(null);
-        assertNull(copy);
-    }
-
-    // copyCalendar
-
-    @Test
-    void copyCalendarNull() {
-        Object copy = proxyManager.copyCalendar(null);
         assertNull(copy);
     }
 
@@ -252,5 +307,4 @@ class ProxyManagerImplTest {
 
         return true; // If all keys and values match
     }
-
 }
