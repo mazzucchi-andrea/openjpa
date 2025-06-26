@@ -80,4 +80,21 @@ class CacheMapSoftMapTest {
         }
         assertEquals(toInsert, cacheMap.size());
     }
+
+    // containsKey/containsValue
+
+    @Test
+    void containsKeyContainsValueTest() {
+        assertNull(cacheMap.put(0,0));
+        assertTrue(cacheMap.pin(0));
+        for (int i = 1; i < 3; i++) {
+            assertNull(cacheMap.put(i, i));
+        }
+        for (int i = 0; i < 3; i++) {
+            assertTrue(cacheMap.containsKey(i));
+        }
+        for (int i = 0; i < 3; i++) {
+            assertTrue(cacheMap.containsValue(i));
+        }
+    }
 }
