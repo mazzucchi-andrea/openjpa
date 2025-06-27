@@ -78,7 +78,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>${test.jvm.arguments}</argLine>
-                    <systemProperties>
+                    <systemPropertyVariables>
                         <property>
                             <name>openjpa.Log</name>
                             <value>${openjpa.Log}</value>
@@ -91,7 +91,7 @@
                             <name>tests.openjpa.allowfailure</name>
                             <value>${tests.openjpa.allowfailure}</value>
                         </property>
-                    </systemProperties>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>

@@ -32,6 +32,7 @@ class CacheMapSoftMapTest {
     void setup() {
         cacheMap = new CacheMap(true, 1, 1, LOAD, CONCURRENCY_LEVEL);
         cacheMap.setSoftReferenceSize(1);
+        assertTrue(cacheMap.isEmpty());
     }
 
     @Test
@@ -50,7 +51,7 @@ class CacheMapSoftMapTest {
 
     @ParameterizedTest
     @MethodSource("provideDataPutTest")
-    void put_getTest(boolean softMap, boolean pinned) {
+    void putGetTest(boolean softMap, boolean pinned) {
         if (pinned) {
             cacheMap.pin(0);
         }
@@ -85,11 +86,22 @@ class CacheMapSoftMapTest {
 
     @Test
     void containsKeyContainsValueTest() {
+        assertFalse(cacheMap.pin(0));
+        assertEquals(1, cacheMap.pinnedMap.size());
+        assertEquals(0, cacheMap.keySet().size());
+        assertTrue(cacheMap.keySet().contains(0));
+        // assertTrue(cacheMap.containsKey(0));
         assertNull(cacheMap.put(0,0));
         assertTrue(cacheMap.pin(0));
         for (int i = 1; i < 3; i++) {
             assertNull(cacheMap.put(i, i));
         }
+        assertEquals(3, cacheMap.size());
+        assertEquals(3, cacheMap.keySet().size());
+        assertFalse(cacheMap.cacheMap.isEmpty());
+        assertFalse(cacheMap.softMap.isEmpty());
+        assertFalse(cacheMap.pinnedMap.isEmpty());
+
         for (int i = 0; i < 3; i++) {
             assertTrue(cacheMap.containsKey(i));
         }
