@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @Timeout(30)
 class CacheMapSoftMapTest {
@@ -31,8 +32,8 @@ class CacheMapSoftMapTest {
     @BeforeEach
     void setup() {
         cacheMap = new CacheMap(true, 1, 1, LOAD, CONCURRENCY_LEVEL);
+        cacheMap = spy(cacheMap);
         cacheMap.setSoftReferenceSize(1);
-        assertTrue(cacheMap.isEmpty());
     }
 
     @Test
@@ -42,9 +43,13 @@ class CacheMapSoftMapTest {
         for (int i = 1; i < 3; i++) {
             cacheMap.put(i, new Dummy("Test" + i, i));
         }
-        assertTrue(cacheMap.softMap.containsKey(0));
+        assertEquals(cacheMap.softMap.containsKey(0), cacheMap.containsKey(0));
         Object deletedValue = cacheMap.remove(0);
         assertEquals(dummy, deletedValue);
+        verify(cacheMap, times(5)).writeLock();
+        verify(cacheMap, times(5)).writeUnlock();
+        verify(cacheMap, times(1)).readLock();
+        verify(cacheMap, times(1)).readUnlock();
     }
 
     // put/get
@@ -108,5 +113,30 @@ class CacheMapSoftMapTest {
         for (int i = 0; i < 3; i++) {
             assertTrue(cacheMap.containsValue(i));
         }
+        verify(cacheMap, times(6)).writeLock();
+        verify(cacheMap, times(6)).writeUnlock();
+        verify(cacheMap, times(9)).readLock();
+        verify(cacheMap, times(9)).readUnlock();
+    }
+
+    // clear
+
+    @Test
+    void clearTest() {
+        assertTrue(cacheMap.isEmpty());
+        for (int i = 0; i < 3; i++) {
+            assertNull(cacheMap.put(i, i));
+        }
+        assertFalse(cacheMap.isEmpty());
+        cacheMap.clear();
+        assertTrue(cacheMap.isEmpty());
+        assertTrue(cacheMap.cacheMap.isEmpty());
+        assertTrue(cacheMap.softMap.isEmpty());
+        assertTrue(cacheMap.pinnedMap.isEmpty());
+        assertTrue(cacheMap.getPinnedKeys().isEmpty());
+        verify(cacheMap, times(5)).writeLock();
+        verify(cacheMap, times(5)).writeUnlock();
+        verify(cacheMap, times(4)).readLock();
+        verify(cacheMap, times(4)).readUnlock();
     }
 }

@@ -167,7 +167,9 @@ class ProxyManagerImplTest {
 
     @Test
     void copyCollectionProxyTest() {
-        Proxy proxy = proxyManager.newCollectionProxy(List.class, Integer.class, null, false);
+        Proxy proxy = proxyManager.newCollectionProxy(List.class, Dummy.class, null, false);
+        assertTrue(((Collection<?>) proxy).isEmpty());
+        assertTrue(((Collection<Dummy>) proxy).add(new Dummy("Test", 0)));
         Collection<?> copy = proxyManager.copyCollection((Collection<?>) proxy);
         assertIterableEquals((Collection<?>) proxy, copy);
     }
@@ -189,7 +191,9 @@ class ProxyManagerImplTest {
 
     @Test
     void copyMapProxyTest() {
-        Proxy proxy = proxyManager.newMapProxy(HashMap.class, Integer.class, Integer.class, null, false);
+        Proxy proxy = proxyManager.newMapProxy(HashMap.class, Integer.class, Dummy.class, null, false);
+        assertTrue(((Map<?, ?>) proxy).isEmpty());
+        assertNull(((Map<Object, Object>) proxy).put(0, new Dummy("Test", 0)));
         Map<?, ?> copy = proxyManager.copyMap((Map<?, ?>) proxy);
         assertTrue(assertMap((Map<?, ?>) proxy, copy));
     }

@@ -14,6 +14,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @Timeout(30)
 class CacheMapTest {
@@ -28,6 +29,7 @@ class CacheMapTest {
     @BeforeEach
     void setup() {
         cacheMap = new CacheMap(true, MAX, SIZE, LOAD, CONCURRENCY_LEVEL);
+        cacheMap = spy(cacheMap);
     }
 
     public static Stream<Arguments> provideDataRemoveTest() {
@@ -150,9 +152,33 @@ class CacheMapTest {
     @ParameterizedTest
     @MethodSource("provideDataPutTest")
     void put_getTest(Object key, Object value) {
-        cacheMap.put(key, value);
+        assertNull(cacheMap.put(key, value));
         assertEquals(value, cacheMap.get(key));
         assertEquals(1, cacheMap.size());
+        verify(cacheMap, times(1)).writeLock();
+        verify(cacheMap, times(1)).writeUnlock();
+        verify(cacheMap, times(2)).readLock();
+        verify(cacheMap, times(2)).readUnlock();
+
+    }
+
+    @Test
+    void alreadyPutTest() {
+        assertNull(cacheMap.put(0, 0));
+        assertEquals(1, cacheMap.size());
+        assertTrue(cacheMap.containsKey(0));
+        assertTrue(cacheMap.containsValue(0));
+        assertEquals(0, cacheMap.put(0, "zero"));
+        assertEquals(1, cacheMap.size());
+        assertTrue(cacheMap.containsKey(0));
+        assertTrue(cacheMap.containsValue("zero"));
+        assertEquals("zero", cacheMap.put(0, 0L));
+        assertEquals(1, cacheMap.size());
+        assertTrue(cacheMap.containsValue(0L));
+        verify(cacheMap, times(3)).writeLock();
+        verify(cacheMap, times(3)).writeUnlock();
+        verify(cacheMap, times(8)).readLock();
+        verify(cacheMap, times(8)).readUnlock();
     }
 
     // putAll
@@ -162,6 +188,10 @@ class CacheMapTest {
     void putAllTest(Map<?, ?> map) {
         cacheMap.putAll(map);
         assertEquals(map.size(), cacheMap.size());
+        verify(cacheMap, times(NUM_ELEM)).writeLock();
+        verify(cacheMap, times(NUM_ELEM)).writeUnlock();
+        verify(cacheMap, times(1)).readLock();
+        verify(cacheMap, times(1)).readUnlock();
         assertTrue(assertMap(map, cacheMap.cacheMap));
     }
 
@@ -196,30 +226,38 @@ class CacheMapTest {
     @MethodSource("provideDataPinTest")
     void pinTest(Object key, Object value, boolean empty) {
         if (!empty) {
-            cacheMap.put(key, value);
+            assertNull(cacheMap.put(key, value));
             assertFalse(cacheMap.isEmpty());
+            // assertTrue(cacheMap.pin(key));
+            cacheMap.pin(key);
+        } else {
+            assertFalse(cacheMap.pin(key));
         }
-        cacheMap.pin(key);
         assertTrue(cacheMap.getPinnedKeys().contains(key));
     }
 
     @Test
     void alreadyPinTest() {
-        cacheMap.pin(0);
+        assertFalse(cacheMap.pin(0));
         assertTrue(cacheMap.getPinnedKeys().contains(0));
-
-        cacheMap.pin(0);
+        assertFalse(cacheMap.pin(0));
         assertTrue(cacheMap.getPinnedKeys().contains(0));
+        verify(cacheMap, times(2)).writeLock();
+        verify(cacheMap, times(2)).writeUnlock();
+        verify(cacheMap, times(2)).readLock();
+        verify(cacheMap, times(2)).readUnlock();
     }
 
     @Test
     void alreadyPinPutTest() {
-        cacheMap.put(0, new Dummy("Test" + 0, 0));
-        cacheMap.pin(0);
+        assertNull(cacheMap.put(0, new Dummy("Test" + 0, 0)));
+        assertTrue(cacheMap.pin(0));
         assertTrue(cacheMap.getPinnedKeys().contains(0));
-
-        cacheMap.pin(0);
-
+        assertTrue(cacheMap.pin(0));
         assertTrue(cacheMap.getPinnedKeys().contains(0));
+        verify(cacheMap, times(3)).writeLock();
+        verify(cacheMap, times(3)).writeUnlock();
+        verify(cacheMap, times(2)).readLock();
+        verify(cacheMap, times(2)).readUnlock();
     }
 }
